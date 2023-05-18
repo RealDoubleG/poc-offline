@@ -1,0 +1,56 @@
+{
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "css.lint.unknownAtRules": "ignore",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "eslint.validate": ["javascript", "typescript"],
+  "explorer.compactFolders": false,
+  "files.eol": "\n",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "material-icon-theme.files.associations": {
+    ".env.homolog": "tune",
+    ".env.local": "tune",
+    ".env.production": "tune"
+  },
+  "material-icon-theme.folders.associations": {
+    "infra": "api",
+    "http": "server",
+    "domain": "interface",
+    "main": "global",
+    "components-hooks": "hook",
+    "presentation": "views",
+    "usecases": "redux-actions",
+    "mutations": "queue",
+    "queries": "event",
+    "requests": "api",
+    "proxies": "secure",
+    "atoms": "React-components",
+    "atoms/**": "React-components",
+    "organisms": "redux-selector",
+    "molecules": "redux-store",
+    "atomic-components": "components"
+  },
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "workbench.iconTheme": "material-icon-theme",
+  "typescript.tsdk": "node_modules/typescript/lib"
+}

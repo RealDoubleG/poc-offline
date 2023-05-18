@@ -1,6 +1,13 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true
+    "baseUrl": "src",
+    "paths": {
+      "*": ["*"],
+      "@atomic/*": ["atomic/*"],
+      "@data/*": ["data/*"],
+      "@routes/*": ["routes/*"],
+      "@store/*": ["store/*"]
+    }
   }
 }
