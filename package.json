@@ -6,7 +6,8 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "json-server": "json-server --watch tasks.json"
   },
   "dependencies": {
     "@expo-google-fonts/montserrat": "^0.2.3",

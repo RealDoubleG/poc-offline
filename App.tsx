@@ -14,10 +14,11 @@ import { useEffect } from 'react';
 import { Text } from 'react-native';
 import { Routes } from 'routes';
 import { THEME } from 'theme';
-import NetInfo from '@react-native-community/netinfo';
-
 import { initDatabase } from 'database/database';
-import { deleteTask, fetchTasks, insertTask } from 'database/tasks';
+// import { deleteTask, fetchTasks, insertTask } from 'database/tasks';
+import { Provider } from 'react-redux';
+
+import store from 'store/store';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -56,19 +57,11 @@ export default function App() {
     //   });
   }, []);
 
-  NetInfo.fetch().then((state) => {
-    console.log('Connection type', state.isInternetReachable);
-    // console.log('Is connected?', state.isConnected);
-  });
-
-  const unsubscribe = NetInfo.addEventListener((state) => {
-    console.log('Connection type', state.isInternetReachable);
-    console.log('Is connected?', state.isConnected);
-  });
-
   return (
-    <NativeBaseProvider theme={THEME}>
-      {fontsLoaded ? <Routes /> : <Text>fonts loading...</Text>}
-    </NativeBaseProvider>
+    <Provider store={store}>
+      <NativeBaseProvider theme={THEME}>
+        {fontsLoaded ? <Routes /> : <Text>fonts loading...</Text>}
+      </NativeBaseProvider>
+    </Provider>
   );
 }

@@ -1,12 +1,31 @@
-import { FC, useState } from 'react';
-import { Fab, Icon, Pressable, Text, VStack, useTheme } from 'native-base';
+import { FC, useState, useEffect } from 'react';
+import { Fab, Icon, Text, VStack } from 'native-base';
 import TaskCard from 'atomic/organisms/taskCard';
 import { MaterialIcons } from '@expo/vector-icons';
 import CreateTaskModal from 'atomic/organisms/createTaskModal';
+import { fetchTasks } from 'store/thunk';
+import { useDispatch } from 'react-redux';
+import NetInfo from '@react-native-community/netinfo';
+import { setHaveInternetConnection } from 'store/tasksSlice';
 
 const Tasks: FC = () => {
   const [isOpenModalCreateContact, setIsOpenModalCreateContact] =
     useState<boolean>(false);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchTasks());
+  }, []);
+
+  const checkInternetConnection = () => {
+    NetInfo.addEventListener((state) => {
+      const isConnected = state.isConnected;
+      dispatch(setHaveInternetConnection(isConnected));
+    });
+  };
+
+  checkInternetConnection();
 
   return (
     <VStack

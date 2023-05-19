@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import { Text, VStack } from 'native-base';
 import TaskCard from 'atomic/organisms/taskCard';
-import CreateTaskModal from 'atomic/organisms/createTaskModal';
 
 const FinishedTasks: FC = () => {
   return (

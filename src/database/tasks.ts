@@ -1,17 +1,31 @@
 import { Task } from 'dto/task';
 import { db } from './database';
-
 export const insertTask = (task: Task): void => {
   db.transaction((tx) => {
     tx.executeSql(
-      'INSERT INTO tasks (id, title, description, finished) VALUES (?, ?, ?, ?)',
-      [task.id, task.title, task.description, task.finished],
-      (_, resultSet) => {
-        console.log('Inserção realizada com sucesso!', resultSet);
-        return true;
+      'SELECT * FROM tasks WHERE id = ?',
+      [task.id],
+      (_, result) => {
+        if (result.rows.length > 0) {
+          console.log('A task já existe no banco:', task);
+          return true;
+        } else {
+          tx.executeSql(
+            'INSERT OR REPLACE tasks (id, title, description, finished) VALUES (?, ?, ?, ?)',
+            [task.id, task.title, task.description, task.finished],
+            (_, resultSet) => {
+              console.log('Inserção realizada com sucesso!', resultSet);
+              return true;
+            },
+            (_, error) => {
+              console.error('Erro ao inserir dados:', error);
+              return false;
+            }
+          );
+        }
       },
       (_, error) => {
-        console.error('Erro ao inserir dados:', error);
+        console.error('Erro ao verificar a existência da task:', error);
         return false;
       }
     );

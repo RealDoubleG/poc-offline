@@ -5,10 +5,11 @@ import {
 } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { Icon, useTheme } from 'native-base';
-import Tasks from 'atomic/templates/Tasks';
+
 import FinishedTasks from 'atomic/templates/finishedTasks';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Platform } from 'react-native';
+import Tasks from 'atomic/templates/tasks';
 
 type AppRoutes = {
   Tasks: undefined;
