@@ -1,15 +1,11 @@
 import React from 'react';
-import {
-  createBottomTabNavigator,
-  BottomTabNavigationProp
-} from '@react-navigation/bottom-tabs';
-import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Icon, useTheme } from 'native-base';
 
 import FinishedTasks from 'atomic/templates/finishedTasks';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Platform } from 'react-native';
-import Tasks from 'atomic/templates/tasks';
+import TasksPage from 'atomic/templates/tasksPage';
 
 type AppRoutes = {
   Tasks: undefined;
@@ -41,7 +37,7 @@ const Navigation: React.FC = () => {
     >
       <Screen
         name="Tasks"
-        component={Tasks}
+        component={TasksPage}
         options={{
           tabBarIcon: ({ color }) => (
             <Icon as={MaterialIcons} size={'lg'} name="dehaze" color={color} />

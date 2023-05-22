@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { Text, VStack } from 'native-base';
-import TaskCard from 'atomic/organisms/taskCard';
 
 const FinishedTasks: FC = () => {
   return (
@@ -21,7 +20,7 @@ const FinishedTasks: FC = () => {
         >
           Tasks finalizadas
         </Text>
-        <TaskCard />
+        {/* <TaskCard /> */}
       </VStack>
     </>
   );

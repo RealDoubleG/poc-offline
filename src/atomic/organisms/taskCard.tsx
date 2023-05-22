@@ -1,5 +1,7 @@
 import { MaterialIcons } from '@expo/vector-icons';
+import { Task } from 'dto/task';
 import {
+  Box,
   Checkbox,
   HStack,
   Icon,
@@ -8,12 +10,18 @@ import {
   VStack,
   useTheme
 } from 'native-base';
+import { FC } from 'react';
 
-const TaskCard = () => {
+interface ITaskCardProps {
+  data: Task;
+}
+
+const TaskCard: FC<ITaskCardProps> = ({ data }) => {
   const { colors } = useTheme();
 
   return (
     <VStack
+      marginY={4}
       w={'full'}
       backgroundColor={colors.gray[700]}
       rounded={'md'}
@@ -29,11 +37,13 @@ const TaskCard = () => {
         borderBottomWidth={2}
         paddingBottom={4}
       >
-        <Text color={'white'} fontSize={'lg'} fontWeight={'bold'}>
-          Titulo da task adadssa dadsa
+        <Text color={'white'} w={'80%'} fontSize={'lg'} fontWeight={'bold'}>
+          {data.title}
         </Text>
-        <HStack alignItems={'center'} space={4}>
+
+        <HStack w={'20%'} alignItems={'center'} space={4}>
           <Checkbox
+            isChecked={data.finished === 1 ? true : false}
             size={'md'}
             colorScheme="purple"
             accessibilityLabel="taskFinalizada"
@@ -55,8 +65,7 @@ const TaskCard = () => {
         fontWeight={'semibold'}
         adjustsFontSizeToFit
       >
-        Descricao da task Descricao da task Descricao da task Descricao da task
-        Descricao da task a a a a a a a a a a a a a a Descricao da task
+        {data.description}
       </Text>
     </VStack>
   );
