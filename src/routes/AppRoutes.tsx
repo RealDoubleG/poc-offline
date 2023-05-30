@@ -5,7 +5,7 @@ import { Icon, useTheme } from 'native-base';
 import FinishedTasks from 'atomic/templates/finishedTasks';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Platform } from 'react-native';
-import TasksPage from 'atomic/templates/tasksPage';
+import { TasksPage } from 'atomic/templates';
 
 type AppRoutes = {
   Tasks: undefined;

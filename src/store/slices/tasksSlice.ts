@@ -1,8 +1,10 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { RequestStatus } from 'dto/requestStatus';
 import { Task } from 'dto/task';
-import { fetchTasks } from './thunk';
-import { insertTask } from 'database/tasks';
+import { fetchApiTasks } from '../thunks/tasksThunk';
+import { RequestStatus } from 'dto/requestStatus';
+import { createTaskInApi } from '../thunks/tasksThunk';
+
+// import { fetchTasks } from './thunk';
 
 interface initialStateProps {
   getTasksLoading: RequestStatus;
@@ -19,24 +21,33 @@ const initialState: initialStateProps = {
   editTaskLoading: 'idle',
   deleteTaskLoading: 'idle',
   tasks: [] as Task[],
-  hasConnection: null
+  hasConnection: true
 };
 
 const tasksSlice = createSlice({
   extraReducers: (builder) => {
     builder
-      .addCase(fetchTasks.pending, (state) => {
+      .addCase(fetchApiTasks.pending, (state) => {
         state.getTasksLoading = 'pending';
       })
-      .addCase(fetchTasks.fulfilled, (state, action) => {
+      .addCase(fetchApiTasks.fulfilled, (state, action) => {
         state.tasks = action.payload;
         state.getTasksLoading = 'succeeded';
       })
-      .addCase(fetchTasks.rejected, (state) => {
+      .addCase(fetchApiTasks.rejected, (state) => {
         state.getTasksLoading = 'failed';
+      })
+      .addCase(createTaskInApi.pending, (state) => {
+        state.createTaskLoading = 'pending';
+      })
+      .addCase(createTaskInApi.fulfilled, (state) => {
+        state.createTaskLoading = 'succeeded';
+      })
+      .addCase(createTaskInApi.rejected, (state) => {
+        state.createTaskLoading = 'failed';
       });
   },
-  name: 'tasks',
+  name: 'tasksSlice',
   initialState,
   reducers: {
     setHaveInternetConnection(state, action: PayloadAction<boolean>) {
@@ -45,6 +56,5 @@ const tasksSlice = createSlice({
   }
 });
 
-export const { reducer: tasksReducer } = tasksSlice;
-
-export const { setHaveInternetConnection } = tasksSlice.actions;
+export const { actions: taskSliceActions, reducer: tasksSliceReducer } =
+  tasksSlice;

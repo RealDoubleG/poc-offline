@@ -1,38 +1,34 @@
 import { Task } from 'dto/task';
 import { db } from './database';
-export const insertTask = (task: Task): void => {
-  db.transaction((tx) => {
-    tx.executeSql(
-      'SELECT * FROM tasks WHERE id = ?',
-      [task.id],
-      (_, result) => {
-        if (result.rows.length > 0) {
-          console.log('A task já existe no banco:', task);
-          return true;
-        } else {
-          tx.executeSql(
-            'INSERT OR REPLACE tasks (id, title, description, finished) VALUES (?, ?, ?, ?)',
-            [task.id, task.title, task.description, task.finished],
-            (_, resultSet) => {
-              console.log('Inserção realizada com sucesso!', resultSet);
-              return true;
-            },
-            (_, error) => {
-              console.error('Erro ao inserir dados:', error);
-              return false;
-            }
-          );
+
+export const insertTaskInDatabase = async (task: Task): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const { id, title, description, finished } = task;
+    const sql = id
+      ? 'INSERT OR REPLACE INTO tasks (id, title, description, finished) VALUES (?, ?, ?, ?)'
+      : 'INSERT OR REPLACE INTO tasks (title, description, finished) VALUES (?, ?, ?)';
+
+    const params = id
+      ? [id, title, description, finished]
+      : [title, description, finished];
+
+    db.transaction((tx) => {
+      tx.executeSql(
+        sql,
+        params,
+        (_, resultSet) => {
+          resolve();
+        },
+        (_, error) => {
+          reject(error);
+          return false;
         }
-      },
-      (_, error) => {
-        console.error('Erro ao verificar a existência da task:', error);
-        return false;
-      }
-    );
+      );
+    });
   });
 };
 
-export const fetchTasks = (): Promise<Task[]> => {
+export const fetchDatabaseTasks = (): Promise<Task[]> => {
   return new Promise((resolve, reject) => {
     db.transaction(
       (tx) => {
@@ -64,7 +60,25 @@ export const fetchTasks = (): Promise<Task[]> => {
   });
 };
 
-export const deleteTask = (taskId: number): Promise<void> => {
+export const clearDatabaseTasks = () => {
+  return new Promise<void>((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        'DELETE FROM tasks',
+        [],
+        (_, resultSet) => {
+          resolve();
+        },
+        (_, error) => {
+          reject(error);
+          return false;
+        }
+      );
+    });
+  });
+};
+
+export const deleteTaskInDatabase = (taskId: number): Promise<void> => {
   return new Promise((resolve, reject) => {
     db.transaction(
       (tx) => {
@@ -72,11 +86,9 @@ export const deleteTask = (taskId: number): Promise<void> => {
           'DELETE FROM tasks WHERE id = ?',
           [taskId],
           (_, resultSet) => {
-            console.log('Registro excluído com sucesso!');
             resolve();
           },
           (_, error) => {
-            console.log('Não deu bom!');
             reject(error);
             return true;
           }
@@ -98,7 +110,6 @@ export const updateTask = async (task: Task): Promise<void> => {
           'UPDATE tasks SET title = ?, description = ?, finished = ? WHERE id = ?',
           [task.title, task.description, task.finished, task.id],
           () => {
-            console.log('Tarefa atualizada com sucesso!');
             resolve();
           },
           (error) => {

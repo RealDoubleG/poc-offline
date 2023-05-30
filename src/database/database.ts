@@ -3,12 +3,18 @@ import { openDatabase } from 'expo-sqlite';
 export const db = openDatabase('task');
 
 const scripts = [
+  `CREATE TABLE IF NOT EXISTS offlineApiRequests (
+    id INTEGER PRIMARY KEY, 
+    apiRequest TEXT NOT NULL
+  );
+  `,
   `CREATE TABLE IF NOT EXISTS tasks (
-    id INTEGER PRIMARY KEY AUTOINCREMENT, 
-    title TEXT, 
-    description TEXT , 
+    id INTEGER PRIMARY KEY, 
+    title TEXT NOT NULL, 
+    description TEXT NOT NULL, 
     finished INTEGER DEFAULT 0 NOT NULL
-  );`,
+  );
+  `,
   "SELECT name FROM sqlite_master WHERE type='table'"
 ];
 

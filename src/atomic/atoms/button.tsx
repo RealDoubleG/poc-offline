@@ -1,8 +1,12 @@
-import { Pressable, Text } from 'native-base';
+import { IPressableProps, Pressable, Text } from 'native-base';
+import { FC } from 'react';
 
-const Button = () => {
+type ButtonProps = IPressableProps;
+
+const Button: FC<ButtonProps> = ({ ...rest }) => {
   return (
     <Pressable
+      {...rest}
       alignItems={'center'}
       w={'full'}
       backgroundColor={'purple.200'}

@@ -18,8 +18,11 @@ module.exports = function (api) {
             '.json'
           ],
           alias: {
+            '@hooks': './src/hooks',
             '@atomic': './src/atomic',
             '@data': './src/data',
+            '@database': './src/database',
+            '@dto': './src/dto',
             '@routes': './src/routes',
             '@store': './src/store'
           }

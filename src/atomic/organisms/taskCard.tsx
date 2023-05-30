@@ -1,15 +1,6 @@
-import { MaterialIcons } from '@expo/vector-icons';
+import { CardHeader } from 'atomic/molecules/cardHeader';
 import { Task } from 'dto/task';
-import {
-  Box,
-  Checkbox,
-  HStack,
-  Icon,
-  Pressable,
-  Text,
-  VStack,
-  useTheme
-} from 'native-base';
+import { Text, VStack, useTheme } from 'native-base';
 import { FC } from 'react';
 
 interface ITaskCardProps {
@@ -30,34 +21,7 @@ const TaskCard: FC<ITaskCardProps> = ({ data }) => {
       space={2}
       minHeight={'26'}
     >
-      <HStack
-        alignItems={'center'}
-        borderBottomColor={'purple.500'}
-        justifyContent={'space-between'}
-        borderBottomWidth={2}
-        paddingBottom={4}
-      >
-        <Text color={'white'} w={'80%'} fontSize={'lg'} fontWeight={'bold'}>
-          {data.title}
-        </Text>
-
-        <HStack w={'20%'} alignItems={'center'} space={4}>
-          <Checkbox
-            isChecked={data.finished === 1 ? true : false}
-            size={'md'}
-            colorScheme="purple"
-            accessibilityLabel="taskFinalizada"
-          />
-          <Pressable _pressed={{ backgroundColor: 'gray.600' }}>
-            <Icon
-              as={MaterialIcons}
-              size={'xl'}
-              name={'delete'}
-              color={'white'}
-            />
-          </Pressable>
-        </HStack>
-      </HStack>
+      <CardHeader title={data.title} finished={data.finished} />
       <Text
         w={'full'}
         color={'white'}

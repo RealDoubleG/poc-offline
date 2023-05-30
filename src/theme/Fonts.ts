@@ -1,5 +1,3 @@
-/* eslint-disable eslint-comments/disable-enable-pair */
-/* eslint-disable camelcase */
 import {
   Montserrat_100Thin,
   Montserrat_200ExtraLight,

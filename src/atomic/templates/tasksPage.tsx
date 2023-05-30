@@ -2,33 +2,36 @@ import { FC, useState, useEffect } from 'react';
 import { Fab, FlatList, Icon, Text, VStack } from 'native-base';
 import { MaterialIcons } from '@expo/vector-icons';
 import CreateTaskModal from 'atomic/organisms/createTaskModal';
-import { fetchTasks } from 'store/thunk';
 import { useDispatch } from 'react-redux';
-import NetInfo from '@react-native-community/netinfo';
-import { setHaveInternetConnection } from 'store/tasksSlice';
 import { useAppSelector } from 'store/store';
 import TaskCard from 'atomic/organisms/taskCard';
+import { fetchApiTasks } from 'store/thunks/tasksThunk';
+import { connectionSliceActions } from 'store/slices/connectionSlice';
+import useInternetConnectivity from 'hooks/hasInternet';
+import { fetchQueueActions } from 'store/thunks/queueThunk';
 
-const TasksPage: FC = () => {
+export const TasksPage: FC = () => {
   const [isOpenModalCreateContact, setIsOpenModalCreateContact] =
     useState<boolean>(false);
 
   const dispatch = useDispatch();
 
+  const { tasks, createTaskLoading } = useAppSelector((state) => state.tasks);
+  const { hasInternetConnection } = useAppSelector((state) => state.connection);
+  const { setInternetConnection } = connectionSliceActions;
+
+  const isConnected = useInternetConnectivity();
+
   useEffect(() => {
-    dispatch(fetchTasks());
-
-    const checkInternetConnection = () => {
-      NetInfo.addEventListener((state) => {
-        const isConnected = state.isConnected;
-        dispatch(setHaveInternetConnection(isConnected));
-      });
-    };
-
-    checkInternetConnection();
+    setInternetConnection(isConnected);
   }, []);
 
-  const { tasks } = useAppSelector((state) => state);
+  useEffect(() => {
+    //@ts-ignore
+    dispatch(fetchQueueActions());
+    //@ts-ignore
+    dispatch(fetchApiTasks());
+  }, [hasInternetConnection, createTaskLoading === 'succeeded']);
 
   return (
     <VStack
@@ -75,5 +78,3 @@ const TasksPage: FC = () => {
     </VStack>
   );
 };
-
-export default TasksPage;
