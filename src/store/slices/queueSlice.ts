@@ -23,7 +23,6 @@ const queueSlice = createSlice({
         state.queueActionsLoading = 'pending';
       })
       .addCase(fetchQueueActions.fulfilled, (state, action) => {
-        console.log('A BAHIA E P LA KKAKAKAKAKA', action.payload);
         state.queueActions = action.payload;
         state.queueActionsLoading = 'succeeded';
       })

@@ -7,6 +7,7 @@ import {
   fetchDatabaseTasks,
   insertTaskInDatabase
 } from 'database/tasks';
+import { clearDatabaseOfflineRequests } from 'database/offlineApiRequests';
 
 export const fetchApiTasks = createAsyncThunk(
   'tasks/getTasks',
@@ -15,8 +16,8 @@ export const fetchApiTasks = createAsyncThunk(
       const state = getState() as RootState;
 
       if (state.connection.hasInternetConnection) {
+        clearDatabaseOfflineRequests();
         clearDatabaseTasks();
-
         const { data } = await api.get('/tasks');
 
         data.forEach((task: Task) => {
@@ -42,8 +43,10 @@ export const fetchApiTasks = createAsyncThunk(
 export const createTaskInApi = createAsyncThunk(
   'tasks/createTask',
   async (task: Task) => {
+    console.log(task);
     try {
       await insertTaskInDatabase(task);
+      console.log('aaaaa');
       const response = await api.post('/tasks', task);
       return response;
     } catch (error) {

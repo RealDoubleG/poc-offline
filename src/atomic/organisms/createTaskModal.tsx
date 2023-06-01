@@ -11,8 +11,8 @@ type ICreateContactModal = IModalProps;
 const CreateTaskModal: FC<ICreateContactModal> = ({ ...rest }) => {
   const dispatch = useDispatch();
 
-  const [taskTitle, setTaskTitle] = useState<string>();
-  const [taskDescription, setTaskDescription] = useState<string>();
+  const [taskTitle, setTaskTitle] = useState<string>('');
+  const [taskDescription, setTaskDescription] = useState<string>('');
 
   const handleSubmitTask = () => {
     dispatch(

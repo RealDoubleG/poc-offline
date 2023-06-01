@@ -38,6 +38,7 @@ const tasksSlice = createSlice({
         state.getTasksLoading = 'failed';
       })
       .addCase(createTaskInApi.pending, (state) => {
+        console.log('deu bom');
         state.createTaskLoading = 'pending';
       })
       .addCase(createTaskInApi.fulfilled, (state) => {

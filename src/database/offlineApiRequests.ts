@@ -3,18 +3,41 @@ import { db } from './database';
 
 export const insertOfflineRequest = ({
   apiRequest
-}: Omit<OfflineRequest, 'id'>): void => {
-  db.transaction((tx) => {
-    tx.executeSql(
-      'INSERT OR REPLACE INTO offlineApiRequests (apiRequest) VALUES (?)',
-      [JSON.stringify(apiRequest)],
-      (_, resultSet) => {
-        return true;
-      },
-      (_, error) => {
-        return false;
-      }
-    );
+}: Omit<OfflineRequest, 'id'>): Promise<boolean> => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        'INSERT OR REPLACE INTO offlineApiRequests (apiRequest) VALUES (?)',
+        [JSON.stringify(apiRequest)],
+        (_, resultSet) => {
+          resolve(true);
+        },
+        (_, error) => {
+          reject(false);
+          return false;
+        }
+      );
+    });
+  });
+};
+
+export const insertOfflineRequestInQueue = async ({
+  apiRequest
+}: Omit<OfflineRequest, 'id'>): Promise<boolean> => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        'INSERT OR REPLACE INTO offlineApiRequests (apiRequest) VALUES (?)',
+        [apiRequest],
+        (_, resultSet) => {
+          resolve(true);
+        },
+        (_, error) => {
+          reject(error);
+          return false;
+        }
+      );
+    });
   });
 };
 
@@ -26,6 +49,7 @@ export const deleteOfflineRequest = (requestId: number): Promise<void> => {
           'DELETE FROM offlineApiRequests WHERE id = ?',
           [requestId],
           (_, resultSet) => {
+            console.log('foi deletado de fato');
             resolve();
           },
           (_, error) => {
@@ -57,18 +81,36 @@ export const listOfflineRequests = (): Promise<OfflineRequest[]> => {
               OfflineRequests.push({ id, apiRequest });
             }
 
+            // console.log('OfflineRequests:', OfflineRequests);
             resolve(OfflineRequests);
           },
           (_, error) => {
-            reject(error);
+            console.log('Error:', error);
             return false;
           }
         );
       },
       (_error) => {
-        resolve([]);
+        console.log('Error:', _error);
         return false;
       }
     );
+  });
+};
+export const clearDatabaseOfflineRequests = () => {
+  return new Promise<void>((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        'DELETE FROM offlineApiRequests',
+        [],
+        (_, resultSet) => {
+          resolve();
+        },
+        (_, error) => {
+          reject(error);
+          return false;
+        }
+      );
+    });
   });
 };

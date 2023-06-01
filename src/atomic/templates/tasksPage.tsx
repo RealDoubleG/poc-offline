@@ -8,7 +8,8 @@ import TaskCard from 'atomic/organisms/taskCard';
 import { fetchApiTasks } from 'store/thunks/tasksThunk';
 import { connectionSliceActions } from 'store/slices/connectionSlice';
 import useInternetConnectivity from 'hooks/hasInternet';
-import { fetchQueueActions } from 'store/thunks/queueThunk';
+import { fetchQueueActions, makeSync } from 'store/thunks/queueThunk';
+import axios from 'axios';
 
 export const TasksPage: FC = () => {
   const [isOpenModalCreateContact, setIsOpenModalCreateContact] =
@@ -16,8 +17,8 @@ export const TasksPage: FC = () => {
 
   const dispatch = useDispatch();
 
-  const { tasks, createTaskLoading } = useAppSelector((state) => state.tasks);
-  const { hasInternetConnection } = useAppSelector((state) => state.connection);
+  const { queueActions } = useAppSelector((state) => state.queue);
+  const { tasks } = useAppSelector((state) => state.tasks);
   const { setInternetConnection } = connectionSliceActions;
 
   const isConnected = useInternetConnectivity();
@@ -27,11 +28,26 @@ export const TasksPage: FC = () => {
   }, []);
 
   useEffect(() => {
-    //@ts-ignore
     dispatch(fetchQueueActions());
-    //@ts-ignore
     dispatch(fetchApiTasks());
-  }, [hasInternetConnection, createTaskLoading === 'succeeded']);
+  }, []);
+
+  useEffect(() => {
+    if (queueActions) {
+      console.log(queueActions);
+      queueActions.forEach(async (action) => {
+        try {
+          const config = JSON.parse(action.apiRequest);
+          await axios
+            .request(config)
+            .then(() => {})
+            .catch((err) => console.log(err));
+        } catch (error) {
+          console.log('erro', error);
+        }
+      });
+    }
+  }, [queueActions]);
 
   return (
     <VStack
