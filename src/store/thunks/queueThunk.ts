@@ -5,6 +5,7 @@ import {
   listOfflineRequests
 } from 'database/offlineApiRequests';
 import { OfflineRequest } from 'dto/offlineRequest';
+import { RootState } from 'store/store';
 
 export const fetchQueueActions = createAsyncThunk(
   'fetchQueueActions',
@@ -22,9 +23,11 @@ export const fetchQueueActions = createAsyncThunk(
 
 export const makeSync = createAsyncThunk(
   'makeSync',
-  async (queueActions: OfflineRequest[]) => {
-    try {
-      queueActions.forEach(async (action: OfflineRequest) => {
+  async (queueActions: OfflineRequest[], { rejectWithValue, getState }) => {
+    const state = getState() as RootState;
+
+    if (state.connection.hasInternetConnection) {
+      queueActions.forEach(async (action) => {
         try {
           const config = JSON.parse(action.apiRequest);
           await axios
@@ -37,6 +40,8 @@ export const makeSync = createAsyncThunk(
           console.log('erro', error);
         }
       });
-    } catch (error) {}
+    } else {
+      return;
+    }
   }
 );

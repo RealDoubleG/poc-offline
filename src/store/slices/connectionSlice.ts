@@ -1,7 +1,13 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { RequestStatus } from '@dto/requestStatus';
+interface initialStateProps {
+  hasInternetConnection: boolean;
+  makeSyncLoading: RequestStatus;
+}
 
-const initialState = {
-  hasInternetConnection: true
+const initialState: initialStateProps = {
+  hasInternetConnection: true,
+  makeSyncLoading: 'idle'
 };
 
 const connectionSlice = createSlice({

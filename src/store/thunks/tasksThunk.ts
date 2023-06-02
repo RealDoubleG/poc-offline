@@ -16,7 +16,7 @@ export const fetchApiTasks = createAsyncThunk(
       const state = getState() as RootState;
 
       if (state.connection.hasInternetConnection) {
-        clearDatabaseOfflineRequests();
+        // clearDatabaseOfflineRequests();
         clearDatabaseTasks();
         const { data } = await api.get('/tasks');
 

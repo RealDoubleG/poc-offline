@@ -14,13 +14,14 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   async (config) => {
-    const isConnected = false;
+    const isConnected = true;
 
     if (config.method !== 'get' && !isConnected) {
       const { transformRequest, transformResponse, ...configCopy } = config;
 
       insertOfflineRequestInQueue({ apiRequest: JSON.stringify(configCopy) });
     } else {
+      console.log('aqui');
       return config;
     }
   },

@@ -9,7 +9,6 @@ import { fetchApiTasks } from 'store/thunks/tasksThunk';
 import { connectionSliceActions } from 'store/slices/connectionSlice';
 import useInternetConnectivity from 'hooks/hasInternet';
 import { fetchQueueActions, makeSync } from 'store/thunks/queueThunk';
-import axios from 'axios';
 
 export const TasksPage: FC = () => {
   const [isOpenModalCreateContact, setIsOpenModalCreateContact] =
@@ -33,20 +32,7 @@ export const TasksPage: FC = () => {
   }, []);
 
   useEffect(() => {
-    if (queueActions) {
-      console.log(queueActions);
-      queueActions.forEach(async (action) => {
-        try {
-          const config = JSON.parse(action.apiRequest);
-          await axios
-            .request(config)
-            .then(() => {})
-            .catch((err) => console.log(err));
-        } catch (error) {
-          console.log('erro', error);
-        }
-      });
-    }
+    dispatch(makeSync(queueActions));
   }, [queueActions]);
 
   return (
