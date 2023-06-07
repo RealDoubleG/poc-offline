@@ -49,7 +49,6 @@ export const deleteOfflineRequest = (requestId: number): Promise<void> => {
           'DELETE FROM offlineApiRequests WHERE id = ?',
           [requestId],
           (_, resultSet) => {
-            console.log('foi deletado de fato');
             resolve();
           },
           (_, error) => {

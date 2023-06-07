@@ -4,7 +4,7 @@ import { insertOfflineRequestInQueue } from 'database/offlineApiRequests';
 
 const checkInternetConnectivity = async () => {
   const netInfoState = await NetInfo.fetch();
-  return netInfoState.isConnected ?? false;
+  return netInfoState.isConnected;
 };
 
 const instance = axios.create({
@@ -15,13 +15,12 @@ const instance = axios.create({
 instance.interceptors.request.use(
   async (config) => {
     const isConnected = true;
-
-    if (config.method !== 'get' && !isConnected) {
+    console.log('aaaaaa', isConnected);
+    if (!isConnected) {
       const { transformRequest, transformResponse, ...configCopy } = config;
 
       insertOfflineRequestInQueue({ apiRequest: JSON.stringify(configCopy) });
     } else {
-      console.log('aqui');
       return config;
     }
   },
@@ -30,5 +29,4 @@ instance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
 export default instance;

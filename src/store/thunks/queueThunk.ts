@@ -29,13 +29,9 @@ export const makeSync = createAsyncThunk(
     if (state.connection.hasInternetConnection) {
       queueActions.forEach(async (action) => {
         try {
+          deleteOfflineRequest(action.id);
           const config = JSON.parse(action.apiRequest);
-          await axios
-            .request(config)
-            .then(() => {
-              deleteOfflineRequest(action.id);
-            })
-            .catch((err) => console.log(err));
+          await axios.request(config);
         } catch (error) {
           console.log('erro', error);
         }

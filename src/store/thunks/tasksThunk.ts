@@ -34,7 +34,7 @@ export const fetchApiTasks = createAsyncThunk(
 
       return tasks;
     } catch (error) {
-      console.log(error);
+      console.log('erro aqui', error);
       throw rejectWithValue(error);
     }
   }
@@ -43,10 +43,8 @@ export const fetchApiTasks = createAsyncThunk(
 export const createTaskInApi = createAsyncThunk(
   'tasks/createTask',
   async (task: Task) => {
-    console.log(task);
     try {
       await insertTaskInDatabase(task);
-      console.log('aaaaa');
       const response = await api.post('/tasks', task);
       return response;
     } catch (error) {

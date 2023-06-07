@@ -16,22 +16,21 @@ export const CardHeader: FC<ICardHeader> = ({ title, finished }) => {
       borderBottomWidth={2}
       paddingBottom={4}
     >
-      <Text color={'white'} w={'80%'} fontSize={'lg'} fontWeight={'bold'}>
+      <Text color={'white'} w={'90%'} fontSize={'lg'} fontWeight={'bold'}>
         {title}
       </Text>
 
-      <HStack w={'20%'} alignItems={'center'} space={4}>
-        <Checkbox
-          isChecked={finished === 1 ? true : false}
-          size={'md'}
-          colorScheme="purple"
-          accessibilityLabel="taskFinalizada"
-        />
+      <HStack
+        w={'10%'}
+        alignItems={'center'}
+        justifyContent={'flex-end'}
+        space={4}
+      >
         <Pressable _pressed={{ backgroundColor: 'gray.600' }}>
           <Icon
             as={MaterialIcons}
             size={'xl'}
-            name={'delete'}
+            name={'more-vert'}
             color={'white'}
           />
         </Pressable>
