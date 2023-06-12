@@ -7,10 +7,10 @@ import { useAppSelector } from 'store/store';
 import TaskCard from 'atomic/organisms/taskCard';
 import { fetchApiTasks } from 'store/thunks/tasksThunk';
 import { connectionSliceActions } from 'store/slices/connectionSlice';
-import useInternetConnectivity from 'hooks/hasInternet';
 import { fetchQueueActions, makeSync } from 'store/thunks/queueThunk';
 import { Loading } from 'atomic/molecules/loading';
 import { taskSliceActions } from 'store/slices/tasksSlice';
+import NetInfo from '@react-native-community/netinfo';
 
 export const TasksPage: FC = () => {
   const [isOpenModalCreateContact, setIsOpenModalCreateContact] =
@@ -20,6 +20,7 @@ export const TasksPage: FC = () => {
 
   const dispatch = useDispatch();
 
+  const { hasInternetConnection } = useAppSelector((state) => state.connection);
   const { queueActions } = useAppSelector((state) => state.queue);
   const { tasks, createTaskLoading, getTasksLoading } = useAppSelector(
     (state) => state.tasks
@@ -29,21 +30,31 @@ export const TasksPage: FC = () => {
   const { resetCreateTaskLoading } = taskSliceActions;
   const { resetMakeSyncLoading } = connectionSliceActions;
 
-  const isConnected = useInternetConnectivity();
-
   useEffect(() => {
-    dispatch(setInternetConnection(true));
-    //@ts-expect-error
-    dispatch(fetchQueueActions());
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      dispatch(setInternetConnection(state.isConnected));
+      if (state.isConnected) {
+        dispatch(fetchQueueActions());
+      }
+      // dispatch(setInternetConnection(true));
+    });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
-    console.log(queueActions);
-    if (queueActions.length !== 0) {
-      //@ts-expect-error
-      dispatch(makeSync(queueActions));
+    // if (queueActions.length !== 0 && hasInternetConnection) {
+    //   dispatch(makeSync(queueActions));
+    // } else {
+    //   dispatch(fetchApiTasks());
+    // }
+    if (queueActions.length !== 0 && hasInternetConnection) {
+      queueActions.forEach((item) => {
+        dispatch(makeSync(item));
+      });
     } else {
-      //@ts-expect-error
       dispatch(fetchApiTasks());
     }
   }, [queueActions]);
@@ -54,19 +65,21 @@ export const TasksPage: FC = () => {
     }
     if (createTaskLoading === 'succeeded') {
       dispatch(resetCreateTaskLoading());
-      //@ts-expect-error
       dispatch(fetchApiTasks());
     }
   }, [createTaskLoading]);
 
   useEffect(() => {
     if (makeSyncLoading === 'succeeded') {
-      //@ts-expect-error
       dispatch(fetchApiTasks());
       dispatch(resetMakeSyncLoading());
       setIsLoading(false);
     }
   }, [makeSyncLoading]);
+
+  useEffect(() => {
+    console.log('CONTRA O VENTOOOO ', queueActions.length);
+  }, [queueActions]);
 
   return (
     <VStack

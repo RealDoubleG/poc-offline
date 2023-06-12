@@ -3,13 +3,13 @@ import { RequestStatus } from '@dto/requestStatus';
 import { makeSync } from 'store/thunks/queueThunk';
 import { fetchQueueActions } from 'store/thunks/queueThunk';
 interface initialStateProps {
-  hasInternetConnection: boolean;
+  hasInternetConnection: boolean | void;
   fetchQueueActionsLoading: RequestStatus;
   makeSyncLoading: RequestStatus;
 }
 
 const initialState: initialStateProps = {
-  hasInternetConnection: true,
+  hasInternetConnection: null,
   fetchQueueActionsLoading: 'idle',
   makeSyncLoading: 'idle'
 };

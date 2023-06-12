@@ -23,21 +23,13 @@ export const fetchQueueActions = createAsyncThunk(
 
 export const makeSync = createAsyncThunk(
   'makeSync',
-  async (queueActions: OfflineRequest[], { rejectWithValue, getState }) => {
-    const state = getState() as RootState;
-
-    if (state.connection.hasInternetConnection) {
-      queueActions.forEach(async (action) => {
-        try {
-          deleteOfflineRequest(action.id);
-          const config = JSON.parse(action.apiRequest);
-          await axios.request(config);
-        } catch (error) {
-          console.log('erro', error);
-        }
-      });
-    } else {
-      return;
+  async (queueAction: OfflineRequest) => {
+    try {
+      deleteOfflineRequest(queueAction.id);
+      const config = JSON.parse(queueAction.apiRequest);
+      await axios.request(config);
+    } catch (error) {
+      console.log('erro', error);
     }
   }
 );

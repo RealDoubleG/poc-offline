@@ -7,7 +7,6 @@ import {
   fetchDatabaseTasks,
   insertTaskInDatabase
 } from 'database/tasks';
-import { clearDatabaseOfflineRequests } from 'database/offlineApiRequests';
 
 export const fetchApiTasks = createAsyncThunk(
   'tasks/getTasks',
@@ -31,11 +30,10 @@ export const fetchApiTasks = createAsyncThunk(
       }
 
       const tasks = await fetchDatabaseTasks();
-
       return tasks;
     } catch (error) {
       console.log('erro aqui', error);
-      throw rejectWithValue(error);
+      // throw rejectWithValue(error);
     }
   }
 );
