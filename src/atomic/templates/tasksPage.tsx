@@ -7,7 +7,10 @@ import { useAppSelector } from 'store/store';
 import TaskCard from 'atomic/organisms/taskCard';
 import { fetchApiTasks } from 'store/thunks/tasksThunk';
 import { connectionSliceActions } from 'store/slices/connectionSlice';
-import { fetchQueueActions, makeSync } from 'store/thunks/queueThunk';
+import {
+  fetchQueueActions,
+  makeSynchronization
+} from 'store/thunks/queueThunk';
 import { Loading } from 'atomic/molecules/loading';
 import { taskSliceActions } from 'store/slices/tasksSlice';
 import NetInfo from '@react-native-community/netinfo';
@@ -15,8 +18,6 @@ import NetInfo from '@react-native-community/netinfo';
 export const TasksPage: FC = () => {
   const [isOpenModalCreateContact, setIsOpenModalCreateContact] =
     useState<boolean>(false);
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const dispatch = useDispatch();
 
@@ -36,7 +37,6 @@ export const TasksPage: FC = () => {
       if (state.isConnected) {
         dispatch(fetchQueueActions());
       }
-      // dispatch(setInternetConnection(true));
     });
 
     return () => {
@@ -45,19 +45,12 @@ export const TasksPage: FC = () => {
   }, []);
 
   useEffect(() => {
-    // if (queueActions.length !== 0 && hasInternetConnection) {
-    //   dispatch(makeSync(queueActions));
-    // } else {
-    //   dispatch(fetchApiTasks());
-    // }
-    if (queueActions.length !== 0 && hasInternetConnection) {
-      queueActions.forEach((item) => {
-        dispatch(makeSync(item));
-      });
-    } else {
-      dispatch(fetchApiTasks());
-    }
-  }, [queueActions]);
+    dispatch(makeSynchronization());
+  }, [queueActions.length !== 0]);
+
+  useEffect(() => {
+    dispatch(fetchApiTasks());
+  }, [hasInternetConnection]);
 
   useEffect(() => {
     if (createTaskLoading === 'pending') {
@@ -73,13 +66,8 @@ export const TasksPage: FC = () => {
     if (makeSyncLoading === 'succeeded') {
       dispatch(fetchApiTasks());
       dispatch(resetMakeSyncLoading());
-      setIsLoading(false);
     }
   }, [makeSyncLoading]);
-
-  useEffect(() => {
-    console.log('CONTRA O VENTOOOO ', queueActions.length);
-  }, [queueActions]);
 
   return (
     <VStack

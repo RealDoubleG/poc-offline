@@ -80,7 +80,6 @@ export const listOfflineRequests = (): Promise<OfflineRequest[]> => {
               OfflineRequests.push({ id, apiRequest });
             }
 
-            // console.log('OfflineRequests:', OfflineRequests);
             resolve(OfflineRequests);
           },
           (_, error) => {
@@ -96,6 +95,7 @@ export const listOfflineRequests = (): Promise<OfflineRequest[]> => {
     );
   });
 };
+
 export const clearDatabaseOfflineRequests = () => {
   return new Promise<void>((resolve, reject) => {
     db.transaction((tx) => {

@@ -1,7 +1,22 @@
-import { FC } from 'react';
-import { Text, VStack } from 'native-base';
+import { FC, useEffect } from 'react';
+import { FlatList, Text, VStack } from 'native-base';
+import { useDispatch } from 'react-redux';
+import { fetchApiFinishedTasks } from 'store/thunks/tasksThunk';
+import { useAppSelector } from 'store/store';
+import { Loading } from 'atomic/molecules/loading';
+import TaskCard from 'atomic/organisms/taskCard';
 
 const FinishedTasks: FC = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchApiFinishedTasks());
+  }, []);
+
+  const { getFinishedTasksLoading, finishedTasks } = useAppSelector(
+    (state) => state.tasks
+  );
+
   return (
     <>
       <VStack
@@ -20,7 +35,20 @@ const FinishedTasks: FC = () => {
         >
           Tasks finalizadas
         </Text>
-        {/* <TaskCard /> */}
+        {getFinishedTasksLoading === 'pending' ? (
+          <Loading text="Carregando tasks" />
+        ) : (
+          <>
+            <FlatList
+              _contentContainerStyle={{
+                paddingBottom: '8'
+              }}
+              flex={1}
+              data={finishedTasks}
+              renderItem={({ item }) => <TaskCard data={item} />}
+            />
+          </>
+        )}
       </VStack>
     </>
   );

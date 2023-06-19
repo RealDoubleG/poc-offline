@@ -15,9 +15,8 @@ const instance = axios.create({
 instance.interceptors.request.use(
   async (config) => {
     const isConnected = await checkInternetConnectivity();
-    // console.log('aaaaaaaaaaaaaaaa', isConnected);
-    // const isConnected = true;
     if (!isConnected) {
+      console.log('cheou aqui');
       const { transformRequest, transformResponse, ...configCopy } = config;
 
       insertOfflineRequestInQueue({ apiRequest: JSON.stringify(configCopy) });

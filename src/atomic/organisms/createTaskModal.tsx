@@ -6,9 +6,9 @@ import { FC, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { createTaskInApi } from 'store/thunks/tasksThunk';
 
-type ICreateContactModal = IModalProps;
+type ICreateTaskModal = IModalProps;
 
-const CreateTaskModal: FC<ICreateContactModal> = ({ ...rest }) => {
+const CreateTaskModal: FC<ICreateTaskModal> = ({ ...rest }) => {
   const dispatch = useDispatch();
 
   const [taskTitle, setTaskTitle] = useState<string>('');

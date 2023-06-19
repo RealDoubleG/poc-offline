@@ -1,13 +1,14 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { HStack, Text, Checkbox, Pressable, Icon } from 'native-base';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 interface ICardHeader {
   title: string;
   finished: number;
+  onPress: () => void;
 }
 
-export const CardHeader: FC<ICardHeader> = ({ title, finished }) => {
+export const CardHeader: FC<ICardHeader> = ({ title, finished, onPress }) => {
   return (
     <HStack
       alignItems={'center'}
@@ -26,11 +27,11 @@ export const CardHeader: FC<ICardHeader> = ({ title, finished }) => {
         justifyContent={'flex-end'}
         space={4}
       >
-        <Pressable _pressed={{ backgroundColor: 'gray.600' }}>
+        <Pressable _pressed={{ backgroundColor: 'gray.600' }} onPress={onPress}>
           <Icon
             as={MaterialIcons}
             size={'xl'}
-            name={'more-vert'}
+            name={finished ? 'delete' : 'done'}
             color={'white'}
           />
         </Pressable>

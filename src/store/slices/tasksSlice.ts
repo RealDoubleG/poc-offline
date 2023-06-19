@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { Task } from 'dto/task';
-import { fetchApiTasks } from '../thunks/tasksThunk';
+import { fetchApiFinishedTasks, fetchApiTasks } from '../thunks/tasksThunk';
 import { RequestStatus } from 'dto/requestStatus';
 import { createTaskInApi } from '../thunks/tasksThunk';
 
@@ -13,6 +13,8 @@ interface initialStateProps {
   deleteTaskLoading: RequestStatus;
   tasks: Task[];
   hasConnection: boolean | null;
+  finishedTasks: Task[];
+  getFinishedTasksLoading: RequestStatus;
 }
 
 const initialState: initialStateProps = {
@@ -21,7 +23,9 @@ const initialState: initialStateProps = {
   editTaskLoading: 'idle',
   deleteTaskLoading: 'idle',
   tasks: [] as Task[],
-  hasConnection: true
+  hasConnection: true,
+  finishedTasks: [] as Task[],
+  getFinishedTasksLoading: 'idle'
 };
 
 const tasksSlice = createSlice({
@@ -31,8 +35,8 @@ const tasksSlice = createSlice({
         state.getTasksLoading = 'pending';
       })
       .addCase(fetchApiTasks.fulfilled, (state, action) => {
-        state.tasks = action.payload;
         state.getTasksLoading = 'succeeded';
+        state.tasks = action.payload;
       })
       .addCase(fetchApiTasks.rejected, (state) => {
         state.getTasksLoading = 'failed';
@@ -45,6 +49,17 @@ const tasksSlice = createSlice({
       })
       .addCase(createTaskInApi.rejected, (state) => {
         state.createTaskLoading = 'failed';
+      })
+      .addCase(fetchApiFinishedTasks.pending, (state) => {
+        state.getFinishedTasksLoading = 'pending';
+      })
+      .addCase(fetchApiFinishedTasks.fulfilled, (state, action) => {
+        state.getFinishedTasksLoading = 'succeeded';
+        state.finishedTasks = action.payload;
+        // console.log(action.payload);
+      })
+      .addCase(fetchApiFinishedTasks.rejected, (state) => {
+        state.getFinishedTasksLoading = 'failed';
       });
   },
   name: 'tasksSlice',

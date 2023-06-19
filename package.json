@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@expo-google-fonts/montserrat": "^0.2.3",
-    "@expo-google-fonts/poppins": "^0.2.3",
     "@expo/vector-icons": "^13.0.0",
     "@react-native-community/netinfo": "9.3.7",
     "@react-navigation/bottom-tabs": "^6.5.7",

@@ -126,3 +126,37 @@ export const updateTask = async (task: Task): Promise<void> => {
     );
   });
 };
+
+export const fetchDatabaseTasksByFinishedStatus = (
+  finished: boolean
+): Promise<Task[]> => {
+  return new Promise((resolve, reject) => {
+    db.transaction(
+      (tx) => {
+        tx.executeSql(
+          'SELECT * FROM tasks WHERE finished = ?',
+          [finished ? 1 : 0],
+          (_, resultSet) => {
+            const tasks: Task[] = [];
+
+            for (let i = 0; i < resultSet.rows.length; i++) {
+              const { id, title, description, finished } =
+                resultSet.rows.item(i);
+              tasks.push({ id, title, description, finished });
+            }
+
+            resolve(tasks);
+          },
+          (_, error) => {
+            reject(error);
+            return false;
+          }
+        );
+      },
+      (_error) => {
+        resolve([]);
+        return false;
+      }
+    );
+  });
+};
