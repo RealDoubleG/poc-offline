@@ -1,15 +1,18 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { Task } from 'dto/task';
-import { fetchApiFinishedTasks, fetchApiTasks } from '../thunks/tasksThunk';
+import {
+  deleteTaskInApi,
+  fetchApiFinishedTasks,
+  fetchApiTasks,
+  finishTask
+} from '../thunks/tasksThunk';
 import { RequestStatus } from 'dto/requestStatus';
 import { createTaskInApi } from '../thunks/tasksThunk';
-
-// import { fetchTasks } from './thunk';
 
 interface initialStateProps {
   getTasksLoading: RequestStatus;
   createTaskLoading: RequestStatus;
-  editTaskLoading: RequestStatus;
+  finishTaskLoading: RequestStatus;
   deleteTaskLoading: RequestStatus;
   tasks: Task[];
   hasConnection: boolean | null;
@@ -20,7 +23,7 @@ interface initialStateProps {
 const initialState: initialStateProps = {
   getTasksLoading: 'idle',
   createTaskLoading: 'idle',
-  editTaskLoading: 'idle',
+  finishTaskLoading: 'idle',
   deleteTaskLoading: 'idle',
   tasks: [] as Task[],
   hasConnection: true,
@@ -56,10 +59,27 @@ const tasksSlice = createSlice({
       .addCase(fetchApiFinishedTasks.fulfilled, (state, action) => {
         state.getFinishedTasksLoading = 'succeeded';
         state.finishedTasks = action.payload;
-        // console.log(action.payload);
       })
       .addCase(fetchApiFinishedTasks.rejected, (state) => {
         state.getFinishedTasksLoading = 'failed';
+      })
+      .addCase(deleteTaskInApi.pending, (state) => {
+        state.deleteTaskLoading = 'pending';
+      })
+      .addCase(deleteTaskInApi.fulfilled, (state) => {
+        state.deleteTaskLoading = 'succeeded';
+      })
+      .addCase(deleteTaskInApi.rejected, (state) => {
+        state.deleteTaskLoading = 'failed';
+      })
+      .addCase(finishTask.pending, (state) => {
+        state.finishTaskLoading = 'pending';
+      })
+      .addCase(finishTask.fulfilled, (state) => {
+        state.finishTaskLoading = 'succeeded';
+      })
+      .addCase(finishTask.rejected, (state) => {
+        state.finishTaskLoading = 'failed';
       });
   },
   name: 'tasksSlice',
@@ -70,6 +90,12 @@ const tasksSlice = createSlice({
     },
     resetCreateTaskLoading(state) {
       state.createTaskLoading = 'idle';
+    },
+    resetDeleteTaskLoading(state) {
+      state.deleteTaskLoading = 'idle';
+    },
+    resetFinishTaskLoading(state) {
+      state.finishTaskLoading = 'idle';
     }
   }
 });

@@ -23,18 +23,18 @@ export const TasksPage: FC = () => {
 
   const { hasInternetConnection } = useAppSelector((state) => state.connection);
   const { queueActions } = useAppSelector((state) => state.queue);
-  const { tasks, createTaskLoading, getTasksLoading } = useAppSelector(
-    (state) => state.tasks
-  );
+  const { tasks, createTaskLoading, getTasksLoading, finishTaskLoading } =
+    useAppSelector((state) => state.tasks);
   const { makeSyncLoading } = useAppSelector((state) => state.connection);
   const { setInternetConnection } = connectionSliceActions;
-  const { resetCreateTaskLoading } = taskSliceActions;
+  const { resetCreateTaskLoading, resetFinishTaskLoading } = taskSliceActions;
   const { resetMakeSyncLoading } = connectionSliceActions;
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
       dispatch(setInternetConnection(state.isConnected));
       if (state.isConnected) {
+        //@ts-ignore
         dispatch(fetchQueueActions());
       }
     });
@@ -45,10 +45,12 @@ export const TasksPage: FC = () => {
   }, []);
 
   useEffect(() => {
+    //@ts-ignore
     dispatch(makeSynchronization());
   }, [queueActions.length !== 0]);
 
   useEffect(() => {
+    //@ts-ignore
     dispatch(fetchApiTasks());
   }, [hasInternetConnection]);
 
@@ -58,16 +60,26 @@ export const TasksPage: FC = () => {
     }
     if (createTaskLoading === 'succeeded') {
       dispatch(resetCreateTaskLoading());
+      //@ts-ignore
       dispatch(fetchApiTasks());
     }
   }, [createTaskLoading]);
 
   useEffect(() => {
     if (makeSyncLoading === 'succeeded') {
+      //@ts-ignore
       dispatch(fetchApiTasks());
       dispatch(resetMakeSyncLoading());
     }
   }, [makeSyncLoading]);
+
+  useEffect(() => {
+    if (finishTaskLoading === 'succeeded') {
+      //@ts-ignore
+      dispatch(fetchApiTasks());
+      dispatch(resetFinishTaskLoading());
+    }
+  }, [finishTaskLoading]);
 
   return (
     <VStack
@@ -78,7 +90,9 @@ export const TasksPage: FC = () => {
       position={'relative'}
       p={2}
     >
-      {makeSyncLoading == 'pending' || getTasksLoading === 'pending' ? (
+      {makeSyncLoading == 'pending' ||
+      getTasksLoading === 'pending' ||
+      finishTaskLoading === 'pending' ? (
         <Loading text="Carregando tasks" />
       ) : (
         <>

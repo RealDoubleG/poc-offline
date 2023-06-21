@@ -4,20 +4,19 @@ import { RootState } from '../store';
 import { Task } from 'dto/task';
 import {
   clearDatabaseTasks,
-  fetchDatabaseTasks,
+  deleteTaskInDatabase,
   fetchDatabaseTasksByFinishedStatus,
-  insertTaskInDatabase
+  insertTaskInDatabase,
+  updateTask
 } from 'database/tasks';
-import { clearDatabaseOfflineRequests } from 'database/offlineApiRequests';
+import { useDispatch } from 'react-redux';
 
 export const fetchApiTasks = createAsyncThunk(
   'tasks/getTasks',
   async (_, { rejectWithValue, getState }) => {
     try {
       const state = getState() as RootState;
-      // console.log(state.connection.hasInternetConnection);
       if (state.connection.hasInternetConnection) {
-        // clearDatabaseOfflineRequests();
         clearDatabaseTasks();
         const { data } = await api.get('/tasks');
 
@@ -80,15 +79,46 @@ export const createTaskInApi = createAsyncThunk(
   }
 );
 
-export const editTaskInApi = createAsyncThunk(
-  'tasks/editTaskInAPi',
-  async (task: Task, { rejectWithValue, getState }) => {
+export const deleteTaskInApi = createAsyncThunk(
+  'tasks/deleTaskInApi',
+  async (taskId: number) => {
     try {
-      const state = getState() as RootState;
-
-      if (state.connection.hasInternetConnection) {
-        fetchDatabaseTasksByFinishedStatus(true).then((a) => console.log('.'));
-      }
-    } catch (error) {}
+      await deleteTaskInDatabase(taskId);
+      const response = await api.delete(`/tasks/${taskId}`);
+      return response;
+    } catch (error) {
+      console.log('Deu erro: ', error);
+    }
   }
 );
+
+export const finishTask = createAsyncThunk(
+  'tasks/finishTask',
+  async (task: Task) => {
+    try {
+      await updateTask(task);
+      const response = await api.put(`/tasks/${task.id}`, task);
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+// export const finishTask = createAsyncThunk(
+//   'tasks/finishTask',
+//   async (task: Task) => {
+//     // try {
+//     dispatch(deleteTaskInApi(task.id));
+//     dispatch(
+//       createTaskInApi({
+//         title: task.title,
+//         finished: 1,
+//         description: task.description
+//       })
+//     );
+//     // } catch (error) {
+//     // console.log(error);
+//     // }
+//   }
+// );

@@ -1,6 +1,7 @@
 import NetInfo from '@react-native-community/netinfo';
-import axios, { AxiosRequestHeaders } from 'axios';
+import axios from 'axios';
 import { insertOfflineRequestInQueue } from 'database/offlineApiRequests';
+import { Task } from 'dto/task';
 
 const checkInternetConnectivity = async () => {
   const netInfoState = await NetInfo.fetch();
@@ -15,10 +16,9 @@ const instance = axios.create({
 instance.interceptors.request.use(
   async (config) => {
     const isConnected = await checkInternetConnectivity();
+    console.log(config.data);
     if (!isConnected) {
-      console.log('cheou aqui');
       const { transformRequest, transformResponse, ...configCopy } = config;
-
       insertOfflineRequestInQueue({ apiRequest: JSON.stringify(configCopy) });
     } else {
       return config;

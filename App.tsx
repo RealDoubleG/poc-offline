@@ -15,7 +15,6 @@ import { Text } from 'react-native';
 import { Routes } from 'routes';
 import { THEME } from 'theme';
 import { initDatabase } from 'database/database';
-// import { deleteTask, fetchTasks, insertTask } from 'database/tasks';
 import { Provider } from 'react-redux';
 
 import store from 'store/store';
@@ -34,27 +33,6 @@ export default function App() {
 
   useEffect(() => {
     initDatabase();
-    // insertTask({
-    //   id: 2,
-    //   title: 'titulo',
-    //   description: 'descricao',
-    //   finished: 0
-    // });
-    // fetchTasks()
-    //   .then((tasks) => {
-    //     console.log('Dados da tabela "task":', tasks);
-    //     // Lógica para manipular os dados da tabela "task"
-    //   })
-    //   .catch((error) => {
-    //     console.error('Erro ao buscar os dados da tabela "task":', error);
-    //   });
-    // deleteTask(1)
-    //   .then(() => {
-    //     console.log('Exclusão concluída com sucesso!');
-    //   })
-    //   .catch((error) => {
-    //     console.error('Erro ao excluir registro:', error);
-    //   });
   }, []);
 
   return (

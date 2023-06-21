@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RequestStatus } from '@dto/requestStatus';
-import { makeSync } from 'store/thunks/queueThunk';
+import { makeSync, makeSynchronization } from 'store/thunks/queueThunk';
 import { fetchQueueActions } from 'store/thunks/queueThunk';
 interface initialStateProps {
   hasInternetConnection: boolean | void;
@@ -28,13 +28,13 @@ const connectionSlice = createSlice({
       .addCase(fetchQueueActions.rejected, (state) => {
         state.fetchQueueActionsLoading = 'failed';
       })
-      .addCase(makeSync.pending, (state) => {
+      .addCase(makeSynchronization.pending, (state) => {
         state.makeSyncLoading = 'pending';
       })
-      .addCase(makeSync.fulfilled, (state) => {
+      .addCase(makeSynchronization.fulfilled, (state) => {
         state.makeSyncLoading = 'succeeded';
       })
-      .addCase(makeSync.rejected, (state) => {
+      .addCase(makeSynchronization.rejected, (state) => {
         state.makeSyncLoading = 'failed';
       });
   },
